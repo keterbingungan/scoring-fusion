@@ -1,0 +1,11 @@
+pytorch-lightning
+torch
+tqdm
+Pillow
+beautifulsoup4
+huggingface_hub
+datasets
+transformers
+regex
+vllm
+modelscope

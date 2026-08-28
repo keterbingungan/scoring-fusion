@@ -1,0 +1,17 @@
+# Ignore dataset dan cache besar
+CMRAG/data/
+results/
+*.cache
+.cache/
+
+# Ignore Python cache & environment
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Ignore IDE & OS files
+.DS_Store
+.vscode/
+.idea/

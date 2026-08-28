@@ -1,0 +1,83 @@
+import os 
+import logging
+import argparse
+import numpy as np 
+from tqdm import trange
+
+import torch 
+from transformers import logging as hf_logging
+hf_logging.set_verbosity_error()
+
+from utils.utils import load_json
+from evaluation.metrics import ems, f1_score
+
+
+
+logger = logging.getLogger(__file__)
+
+def setup_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--save_file',
+        type=str,
+        default='results_hotpotqa_num7404_top2_Qwen2.5-7B-Instruct.json',
+        help='The name of the input file.'
+    )
+    parser.add_argument(
+        '--num_samples',
+        type=int,
+        default=-1,
+        help='Number of samples to use in evaluation. -1 means all'
+    )
+    args = parser.parse_args()
+    return args
+
+    
+
+
+def main():
+    args = setup_args()
+    file_path = args.save_file
+    print(f"loading data: {file_path}")
+    data = load_json(file_path)
+    
+    if args.num_samples > 0:
+        data = data[:args.num_samples]
+
+    em_scores, f1_scores = [], []
+
+    
+    for example in data:
+        gold_answer = example["answer"]
+        gold_answer = [gold_answer] if isinstance(gold_answer, str) else gold_answer
+        for i in range(len(gold_answer)):
+            if isinstance(gold_answer[i], list):
+                gold_answer[i] = gold_answer[i][0]
+        
+        pred_answer = example["response"]
+        if isinstance(pred_answer, list):
+            pred_answer = pred_answer[0]
+        
+        
+        ems_score = ems(pred_answer, gold_answer)
+        f1 = f1_score(pred_answer, gold_answer[0])[0]
+        em_scores.append(ems_score)
+        f1_scores.append(f1)
+
+
+    avg_ems = np.mean(em_scores)
+    avg_f1 = np.mean(f1_scores)
+
+    
+    print("==================== Evaluation Result ====================")
+    print(">>>> File: {}".format(args.save_file))
+    print(">>>> EM: {:.5f}".format(avg_ems))
+    print(">>>> F1: {:.5f}".format(avg_f1))
+    print("===========================================================")
+     
+
+     
+
+if __name__ == "__main__":
+    
+    main()
