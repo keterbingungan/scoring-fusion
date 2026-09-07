@@ -590,8 +590,11 @@ def ensure_dataset(data_name: str, json_path: str = "", tar_path: str = ""):
         os.path.join(local_dir, "MMLongbench.json"),
         f"/content/drive/MyDrive/TA/CMRAG/data/CMRAG-Bench/{data_name}/{data_name}.json",
         f"/content/drive/MyDrive/TA/CMRAG/data/CMRAG-Bench/{data_name}/MMLongbench.json",
+        f"/content/drive/MyDrive/TA/CMRAG/data/{data_name}/{data_name}.json",
+        f"/content/drive/MyDrive/TA/CMRAG/data/{data_name}/MMLongbench.json",
         f"data/CMRAG-Bench/{data_name}/{data_name}.json",
         f"data/CMRAG-Bench/{data_name}/MMLongbench.json",
+        f"data/{data_name}/{data_name}.json",
     ]
     resolved_json = next((p for p in json_candidates if p and os.path.exists(p)), None)
     if not resolved_json:
@@ -604,7 +607,9 @@ def ensure_dataset(data_name: str, json_path: str = "", tar_path: str = ""):
         tar_path if tar_path else None,
         os.path.join(local_dir, "images.tar"),
         f"/content/drive/MyDrive/TA/CMRAG/data/CMRAG-Bench/{data_name}/images.tar",
+        f"/content/drive/MyDrive/TA/CMRAG/data/{data_name}/images.tar",
         f"data/CMRAG-Bench/{data_name}/images.tar",
+        f"data/{data_name}/images.tar",
     ]
     resolved_tar = next((p for p in tar_candidates if p and os.path.exists(p)), None)
     if not resolved_tar:
